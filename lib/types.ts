@@ -1,6 +1,8 @@
 export type SectionType = "quick_wins" | "cluster";
 
-export type ReadingStatus = "not_started" | "reading" | "completed";
+export type ReadingStatus = "not_started" | "reading" | "read";
+
+export type StudyGuideSource = "pdf" | "ai_knowledge";
 
 export interface Book {
   id: number;
@@ -17,9 +19,12 @@ export interface Book {
   section_subtitle: string;
   cluster_vibe: string | null;
   order_in_section: number;
+  cover_image_url: string | null;
 }
 
 export interface ReadingProgress {
+  id: number;
+  user_id: string | null;
   book_id: number;
   status: ReadingStatus;
   date_started: string | null;
@@ -28,9 +33,7 @@ export interface ReadingProgress {
   rating: number | null;
   pdf_storage_path: string | null;
   study_guide: string | null;
-  study_guide_source: string | null;
-  cover_image_url: string | null;
-  user_id: string | null;
+  study_guide_source: StudyGuideSource | null;
 }
 
 export interface BookWithProgress extends Book {
