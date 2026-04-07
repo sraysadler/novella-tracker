@@ -27,14 +27,9 @@ This project does NOT use a `src/` folder. Top-level structure:
 - When your work is complete, do ALL of the following in order:
   1. Commit all changes with a clear commit message
   2. Push the branch to GitHub
-  3. Create the pull request on GitHub (not just provide a URL)
-- Use the `gh` CLI to create the PR if available:
-  `gh pr create --title "..." --body "..." --base main`
-- If `gh` CLI is not available, install it: `brew install gh`
-  then authenticate with `gh auth login`
+  3. Provide the direct PR creation URL for the developer to click
 - Always target the `main` branch.
-- The developer should see a completed PR link they can click
-  to review and merge — not a URL to manually create one.
+- The developer will create and merge the PR on GitHub.
 
 ### Environment Variables
 - If your code requires environment variables that are not already
