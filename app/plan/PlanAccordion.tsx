@@ -134,7 +134,7 @@ export default function PlanAccordion({
         return (
           <div
             key={section.section_order}
-            className="rounded-xl border border-stone-200 dark:border-stone-700/60 overflow-hidden bg-stone-50 dark:bg-stone-900"
+            className="rounded-xl border border-stone-200 dark:border-stone-700/60 bg-stone-50 dark:bg-stone-900"
           >
             {/* ── Section header ── */}
             <button
@@ -167,13 +167,14 @@ export default function PlanAccordion({
 
             {/* ── Book list (collapsible) ── */}
             {isOpen && (
-              <div>
-                <ul role="list">
+              <div className="overflow-hidden">
+                <ul role="list" className="overflow-visible">
                   {section.books.map((book, idx) => (
                     <li key={book.id}>
                       <BookRow
                         book={book}
                         isFirst={idx === 0}
+                        isLast={idx >= section.books.length - 2}
                         onStatusChange={handleStatusChange}
                       />
                     </li>

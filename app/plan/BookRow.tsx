@@ -24,10 +24,12 @@ function StatusDot({ status }: { status: ReadingStatus }) {
 export default function BookRow({
   book,
   isFirst,
+  isLast,
   onStatusChange,
 }: {
   book: BookWithProgress;
   isFirst: boolean;
+  isLast?: boolean;
   onStatusChange?: (bookId: number, newStatus: ReadingStatus) => void;
 }) {
   const currentStatus = book.progress?.status ?? "not_started";
@@ -109,7 +111,7 @@ export default function BookRow({
 
         {/* Dropdown menu */}
         {isOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-lg z-10 min-w-48">
+          <div className={`absolute left-0 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-lg z-10 min-w-48 ${isLast ? "bottom-full mb-1" : "top-full mt-1"}`}>
             {(["not_started", "reading", "read"] as ReadingStatus[]).map((status) => (
               <button
                 key={status}
