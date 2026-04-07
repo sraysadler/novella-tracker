@@ -86,7 +86,10 @@ export default function BookRow({
       {/* Status dropdown */}
       <div className="relative" ref={menuRef}>
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
           className="flex items-center gap-1.5 p-1 -m-1 rounded hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
           aria-label={`Change status: currently ${statusLabels[currentStatus]}`}
           disabled={isPending}
@@ -111,7 +114,10 @@ export default function BookRow({
             {(["not_started", "reading", "read"] as ReadingStatus[]).map((status) => (
               <button
                 key={status}
-                onClick={() => handleStatusChange(status)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleStatusChange(status);
+                }}
                 className={`w-full text-left px-4 py-2.5 text-sm border-b border-stone-100 dark:border-stone-700/50 last:border-b-0 flex items-center gap-2 transition-colors ${
                   status === currentStatus
                     ? "bg-stone-100 dark:bg-stone-700 font-medium text-stone-900 dark:text-stone-50"
