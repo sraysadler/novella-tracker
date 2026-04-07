@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "npm run build",
+      "npm run dev",
+      "npm run seed",
+      "npm install",
+      "git add",
+      "git commit",
+      "git push",
+      "git pull",
+      "git status",
+      "git diff",
+      "git log",
+      "git branch",
+      "git checkout",
+      "git stash",
+      "find",
+      "ls",
+      "cat",
+      "echo",
+      "pwd",
+      "mkdir"
+    ]
+  }
+}
