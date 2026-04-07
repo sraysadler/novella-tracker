@@ -109,7 +109,7 @@ export default function BookRow({
 
         {/* Dropdown menu */}
         {isOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-lg z-10 min-w-48">
+          <div className="absolute top-full left-0 mt-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-lg z-50 min-w-48">
             {(["not_started", "reading", "read"] as ReadingStatus[]).map((status) => (
               <button
                 key={status}
