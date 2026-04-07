@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useRef, useEffect } from "react";
+import Link from "next/link";
 import type { BookWithProgress } from "@/lib/types";
 import type { ReadingStatus } from "@/lib/types";
 import { updateReadingStatus } from "@/lib/actions";
@@ -76,10 +77,11 @@ export default function BookRow({
   };
 
   return (
-    <div
+    <Link
+      href={`/book/${book.id}`}
       className={`flex items-center gap-3 px-4 py-2.5 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors relative ${
         isFirst ? "border-t border-stone-200 dark:border-stone-700" : "border-t border-stone-100 dark:border-stone-700/40"
-      } ${isPending ? "opacity-75" : ""}`}
+      } ${isPending ? "opacity-75" : ""} block`}
     >
       {/* Status dropdown */}
       <div className="relative" ref={menuRef}>
@@ -152,6 +154,6 @@ export default function BookRow({
         )}
         <span className="tabular-nums">{book.pages}p</span>
       </div>
-    </div>
+    </Link>
   );
 }
