@@ -68,12 +68,12 @@ export default async function PlanPage() {
   );
 
   return (
-    <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 py-8">
+    <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 py-12">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-50 mb-1">
+        <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-stone-50 mb-2">
           Reading Plan
         </h1>
-        <p className="text-sm text-stone-500 dark:text-stone-400 mb-8">
+        <p className="text-sm text-stone-500 dark:text-stone-400 mb-10">
           {totalRead} of 100 novellas read &middot; Quick Wins path &rarr; 10 theme clusters
         </p>
 
