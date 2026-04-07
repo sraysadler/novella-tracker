@@ -84,7 +84,7 @@ function ProgressBar({ read, total }: { read: number; total: number }) {
   return (
     <div className="h-1 w-16 rounded-full bg-stone-200 dark:bg-stone-700 overflow-hidden">
       <div
-        className="h-full rounded-full bg-amber-400 transition-all duration-300"
+        className="h-full rounded-full bg-teal-600 dark:bg-teal-500 transition-all duration-300"
         style={{ width: `${pct}%` }}
       />
     </div>
@@ -121,7 +121,7 @@ export default function PlanAccordion({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {sections.map((section) => {
         const isOpen = openSections.has(section.section_order);
         const readCount = section.books.filter(
@@ -132,18 +132,18 @@ export default function PlanAccordion({
         return (
           <div
             key={section.section_order}
-            className="rounded-xl border border-stone-200 dark:border-stone-700/60 overflow-hidden bg-white dark:bg-stone-900"
+            className="rounded-xl border border-stone-200 dark:border-stone-700/60 overflow-hidden bg-stone-50 dark:bg-stone-900"
           >
             {/* ── Section header ── */}
             <button
               onClick={() => toggle(section.section_order)}
-              className="w-full flex items-start justify-between gap-3 px-4 py-3.5 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200/70 dark:hover:bg-stone-700/60 transition-colors text-left"
+              className="w-full flex items-start justify-between gap-3 px-4 py-4 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200/70 dark:hover:bg-stone-700/60 transition-colors text-left"
               aria-expanded={isOpen}
             >
               {/* Left: label + name + subtitle */}
               <div className="flex-1 min-w-0">
                 <SectionPill section={section} />
-                <p className="font-semibold text-sm text-stone-900 dark:text-stone-50 mt-0.5 leading-snug">
+                <p className="font-serif font-semibold text-sm text-stone-900 dark:text-stone-50 mt-0.5 leading-snug">
                   {section.section_name}
                 </p>
                 <p className="text-xs italic text-stone-400 dark:text-stone-500 mt-0.5 leading-snug">
@@ -171,7 +171,7 @@ export default function PlanAccordion({
                     <li key={book.id}>
                       <Link
                         href={`/book/${book.id}`}
-                        className={`flex items-center gap-3 px-4 py-2.5 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors ${
+                        className={`flex items-center gap-3 px-4 py-3 hover:bg-stone-100/70 dark:hover:bg-stone-800/50 transition-colors ${
                           idx > 0
                             ? "border-t border-stone-100 dark:border-stone-700/40"
                             : "border-t border-stone-200 dark:border-stone-700"
@@ -183,7 +183,7 @@ export default function PlanAccordion({
 
                         {/* Title + author */}
                         <div className="flex-1 min-w-0">
-                          <span className="font-medium text-sm text-stone-900 dark:text-stone-100 leading-snug">
+                          <span className="font-serif font-medium text-sm text-stone-900 dark:text-stone-100 leading-snug">
                             {book.title}
                           </span>
                           <span className="text-stone-400 dark:text-stone-500 text-xs ml-2">
@@ -210,9 +210,9 @@ export default function PlanAccordion({
 
                 {/* ── Cluster vibe pull quote ── */}
                 {section.cluster_vibe && (
-                  <div className="px-4 pb-4 pt-2 border-t border-stone-100 dark:border-stone-700/40">
-                    <blockquote className="border-l-2 border-teal-400 dark:border-teal-500 pl-3">
-                      <p className="text-sm italic text-stone-400 dark:text-stone-500 leading-relaxed">
+                  <div className="px-5 pb-5 pt-3 border-t border-stone-100 dark:border-stone-700/40">
+                    <blockquote className="border-l-[3px] border-teal-400 dark:border-teal-500 pl-4 ml-1">
+                      <p className="text-sm italic text-stone-500 dark:text-stone-400 leading-relaxed">
                         {section.cluster_vibe}
                       </p>
                     </blockquote>
