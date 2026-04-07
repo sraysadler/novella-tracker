@@ -77,11 +77,10 @@ export default function BookRow({
   };
 
   return (
-    <Link
-      href={`/book/${book.id}`}
-      className={`flex items-center gap-3 px-4 py-2.5 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors relative ${
+    <div
+      className={`flex items-center gap-3 px-4 py-2.5 transition-colors relative ${
         isFirst ? "border-t border-stone-200 dark:border-stone-700" : "border-t border-stone-100 dark:border-stone-700/40"
-      } ${isPending ? "opacity-75" : ""} block`}
+      } ${isPending ? "opacity-75" : ""}`}
     >
       {/* Status dropdown */}
       <div className="relative" ref={menuRef}>
@@ -132,28 +131,34 @@ export default function BookRow({
         )}
       </div>
 
-      {/* Title + author */}
-      <div className="flex-1 min-w-0">
-        <span className="font-medium text-sm text-stone-900 dark:text-stone-100 leading-snug">
-          {book.title}
-        </span>
-        <span className="text-stone-400 dark:text-stone-500 text-xs ml-2">
-          {book.author}
-        </span>
-      </div>
-
-      {/* Page count + film badge */}
-      <div className="flex items-center gap-2 shrink-0 text-xs text-stone-400 dark:text-stone-500">
-        {book.film_adaptation && (
-          <span
-            title={book.film_adaptation}
-            aria-label="Film adaptation exists"
-          >
-            🎬
+      {/* Link wraps only the book info */}
+      <Link
+        href={`/book/${book.id}`}
+        className="flex items-center gap-3 flex-1 min-w-0 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors -mx-4 px-4 py-2.5 -my-2.5"
+      >
+        {/* Title + author */}
+        <div className="flex-1 min-w-0">
+          <span className="font-medium text-sm text-stone-900 dark:text-stone-100 leading-snug">
+            {book.title}
           </span>
-        )}
-        <span className="tabular-nums">{book.pages}p</span>
-      </div>
-    </Link>
+          <span className="text-stone-400 dark:text-stone-500 text-xs ml-2">
+            {book.author}
+          </span>
+        </div>
+
+        {/* Page count + film badge */}
+        <div className="flex items-center gap-2 shrink-0 text-xs text-stone-400 dark:text-stone-500">
+          {book.film_adaptation && (
+            <span
+              title={book.film_adaptation}
+              aria-label="Film adaptation exists"
+            >
+              🎬
+            </span>
+          )}
+          <span className="tabular-nums">{book.pages}p</span>
+        </div>
+      </Link>
+    </div>
   );
 }
