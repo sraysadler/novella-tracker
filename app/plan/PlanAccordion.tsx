@@ -176,41 +176,6 @@ export default function PlanAccordion({
                         isFirst={idx === 0}
                         onStatusChange={handleStatusChange}
                       />
-                      <Link
-                        href={`/book/${book.id}`}
-                        className={`flex items-center gap-3 px-4 py-3 hover:bg-stone-100/70 dark:hover:bg-stone-800/50 transition-colors ${
-                          idx > 0
-                            ? "border-t border-stone-100 dark:border-stone-700/40"
-                            : "border-t border-stone-200 dark:border-stone-700"
-                        }`}
-                      >
-                        <StatusDot
-                          status={book.progress?.status ?? "not_started"}
-                        />
-
-                        {/* Title + author */}
-                        <div className="flex-1 min-w-0">
-                          <span className="font-serif font-medium text-sm text-stone-900 dark:text-stone-100 leading-snug">
-                            {book.title}
-                          </span>
-                          <span className="text-stone-400 dark:text-stone-500 text-xs ml-2">
-                            {book.author}
-                          </span>
-                        </div>
-
-                        {/* Page count + film badge */}
-                        <div className="flex items-center gap-2 shrink-0 text-xs text-stone-400 dark:text-stone-500">
-                          {book.film_adaptation && (
-                            <span
-                              title={book.film_adaptation}
-                              aria-label="Film adaptation exists"
-                            >
-                              🎬
-                            </span>
-                          )}
-                          <span className="tabular-nums">{book.pages}p</span>
-                        </div>
-                      </Link>
                     </li>
                   ))}
                 </ul>
