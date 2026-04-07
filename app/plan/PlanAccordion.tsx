@@ -1,34 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import type { SectionData } from "./page";
 import type { ReadingStatus } from "@/lib/types";
-
-// ---------------------------------------------------------------------------
-// Status dot
-// ---------------------------------------------------------------------------
-function StatusDot({ status }: { status: ReadingStatus }) {
-  const cls = {
-    not_started: "bg-stone-300 dark:bg-stone-600",
-    reading: "bg-teal-500",
-    read: "bg-amber-400",
-  }[status];
-
-  const label = {
-    not_started: "Not started",
-    reading: "Currently reading",
-    read: "Read",
-  }[status];
-
-  return (
-    <span
-      className={`inline-block w-2.5 h-2.5 rounded-full shrink-0 ${cls}`}
-      aria-label={label}
-      title={label}
-    />
-  );
-}
+import BookRow from "./BookRow";
 
 // ---------------------------------------------------------------------------
 // Chevron icon
@@ -95,21 +70,24 @@ function ProgressBar({ read, total }: { read: number; total: number }) {
 // Main accordion
 // ---------------------------------------------------------------------------
 export default function PlanAccordion({
-  sections,
+  sections: initialSections,
 }: {
   sections: SectionData[];
 }) {
   // Default-open: the section containing a "reading" book, or the first section
   const defaultOpen = (() => {
-    const s = sections.find((sec) =>
+    const s = initialSections.find((sec) =>
       sec.books.some((b) => b.progress?.status === "reading")
     );
-    return s?.section_order ?? sections[0]?.section_order;
+    return s?.section_order ?? initialSections[0]?.section_order;
   })();
 
   const [openSections, setOpenSections] = useState<Set<number>>(
     () => new Set(defaultOpen !== undefined ? [defaultOpen] : [])
   );
+
+  // State to track status changes for optimistic updates
+  const [sections, setSections] = useState(initialSections);
 
   function toggle(order: number) {
     setOpenSections((prev) => {
@@ -118,6 +96,30 @@ export default function PlanAccordion({
       else next.add(order);
       return next;
     });
+  }
+
+  function handleStatusChange(bookId: number, newStatus: ReadingStatus) {
+    setSections((prev) =>
+      prev.map((section) => ({
+        ...section,
+        books: section.books.map((book) => {
+          if (book.id === bookId) {
+            return {
+              ...book,
+              progress: book.progress ? { ...book.progress, status: newStatus } : null,
+            };
+          }
+          // If changing this book to "reading", change any other "reading" book to "not_started"
+          if (newStatus === "reading" && book.progress?.status === "reading") {
+            return {
+              ...book,
+              progress: book.progress ? { ...book.progress, status: "not_started" } : null,
+            };
+          }
+          return book;
+        }),
+      }))
+    );
   }
 
   return (
@@ -169,41 +171,11 @@ export default function PlanAccordion({
                 <ul role="list">
                   {section.books.map((book, idx) => (
                     <li key={book.id}>
-                      <Link
-                        href={`/book/${book.id}`}
-                        className={`flex items-center gap-3 px-4 py-3 hover:bg-stone-100/70 dark:hover:bg-stone-800/50 transition-colors ${
-                          idx > 0
-                            ? "border-t border-stone-100 dark:border-stone-700/40"
-                            : "border-t border-stone-200 dark:border-stone-700"
-                        }`}
-                      >
-                        <StatusDot
-                          status={book.progress?.status ?? "not_started"}
-                        />
-
-                        {/* Title + author */}
-                        <div className="flex-1 min-w-0">
-                          <span className="font-serif font-medium text-sm text-stone-900 dark:text-stone-100 leading-snug">
-                            {book.title}
-                          </span>
-                          <span className="text-stone-400 dark:text-stone-500 text-xs ml-2">
-                            {book.author}
-                          </span>
-                        </div>
-
-                        {/* Page count + film badge */}
-                        <div className="flex items-center gap-2 shrink-0 text-xs text-stone-400 dark:text-stone-500">
-                          {book.film_adaptation && (
-                            <span
-                              title={book.film_adaptation}
-                              aria-label="Film adaptation exists"
-                            >
-                              🎬
-                            </span>
-                          )}
-                          <span className="tabular-nums">{book.pages}p</span>
-                        </div>
-                      </Link>
+                      <BookRow
+                        book={book}
+                        isFirst={idx === 0}
+                        onStatusChange={handleStatusChange}
+                      />
                     </li>
                   ))}
                 </ul>
