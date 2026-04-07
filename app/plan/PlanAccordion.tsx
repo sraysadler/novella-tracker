@@ -174,6 +174,7 @@ export default function PlanAccordion({
                       <BookRow
                         book={book}
                         isFirst={idx === 0}
+                        isLast={idx === section.books.length - 1}
                         onStatusChange={handleStatusChange}
                       />
                     </li>
