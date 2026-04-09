@@ -177,7 +177,7 @@ export default async function Home() {
                   <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50 truncate">
+                        <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50 line-clamp-2">
                           {currentlyReading.title}
                         </h3>
                         <p className="text-stone-600 dark:text-stone-400 mt-1">
@@ -216,7 +216,7 @@ export default async function Home() {
                   <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50 truncate">
+                        <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50 line-clamp-2">
                           {nextBook.title}
                         </h3>
                         <p className="text-stone-600 dark:text-stone-400 mt-1">
