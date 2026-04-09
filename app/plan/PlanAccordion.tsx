@@ -98,6 +98,24 @@ export default function PlanAccordion({
     }
   );
 
+  // Scroll to the target section when arriving from dashboard link
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem("plan-open-sections");
+      if (stored) {
+        const parsed = JSON.parse(stored) as number[];
+        if (parsed.length === 1) {
+          const el = document.getElementById(`section-${parsed[0]}`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   // State to track status changes for optimistic updates
   const [sections, setSections] = useState(initialSections);
 
@@ -152,6 +170,7 @@ export default function PlanAccordion({
         return (
           <div
             key={section.section_order}
+            id={`section-${section.section_order}`}
             className="rounded-xl border border-stone-200 dark:border-stone-700/60 bg-stone-50 dark:bg-stone-900"
           >
             {/* ── Section header ── */}
