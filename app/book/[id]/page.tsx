@@ -38,7 +38,7 @@ export default async function BookPage({
   if (!book) {
     return (
       <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <Link
             href="/plan"
             className="inline-flex items-center gap-1 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors mb-6"
@@ -70,7 +70,7 @@ export default async function BookPage({
 
   return (
     <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 sm:px-6 py-8 pb-32 w-full">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <Link
           href="/plan"
           className="inline-flex items-center gap-1 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors mb-8"

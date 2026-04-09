@@ -144,10 +144,10 @@ export default function BookRow({
       >
         {/* Title + author */}
         <div className="flex-1 min-w-0">
-          <span className="font-medium text-sm text-stone-900 dark:text-stone-100 leading-snug">
+          <span className="font-medium text-base text-stone-900 dark:text-stone-100 leading-snug">
             {book.title}
           </span>
-          <span className="block text-xs text-stone-400 dark:text-stone-500 mt-0.5">
+          <span className="block text-sm text-stone-400 dark:text-stone-500 mt-0.5">
             {book.author}
           </span>
         </div>
