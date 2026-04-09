@@ -24,7 +24,8 @@ export default function BookDetailClient({
 }: {
   book: BookWithProgress;
 }) {
-  const currentStatus = book.progress?.status ?? "not_started";
+  const initialStatus = book.progress?.status ?? "not_started";
+  const [currentStatus, setCurrentStatus] = useState<ReadingStatus>(initialStatus);
   const [isPending, startTransition] = useTransition();
 
   const statusLabels = {
@@ -42,10 +43,14 @@ export default function BookDetailClient({
   const handleStatusChange = (newStatus: ReadingStatus) => {
     if (newStatus === currentStatus) return;
 
+    const previousStatus = currentStatus;
+    setCurrentStatus(newStatus);
+
     startTransition(async () => {
       const result = await updateReadingStatus(book.id, newStatus);
       if (!result.success) {
         console.error("Failed to update status:", result.error);
+        setCurrentStatus(previousStatus);
       }
     });
   };
