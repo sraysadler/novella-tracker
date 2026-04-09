@@ -167,81 +167,78 @@ export default async function Home() {
               </div>
             </section>
 
-            {/* Currently Reading + Up Next */}
+            {/* Currently Reading */}
             <section>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                  <h2 className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50 mb-4">
-                    Currently Reading
-                  </h2>
-                  {currentlyReading ? (
-                    <Link href={`/book/${currentlyReading.id}`}>
-                      <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="min-w-0 flex-1">
-                            <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50 line-clamp-2">
-                              {currentlyReading.title}
-                            </h3>
-                            <p className="text-stone-600 dark:text-stone-400 mt-1">
-                              {currentlyReading.author}
-                            </p>
-                            <p className="text-xs text-stone-500 dark:text-stone-500 mt-2">
-                              {currentlyReading.pages} pages
-                            </p>
-                          </div>
-                          <div className="flex-shrink-0 w-3 h-3 bg-teal-500 rounded-full mt-1" />
-                        </div>
+              <h2 className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50 mb-4">
+                Currently Reading
+              </h2>
+              {currentlyReading ? (
+                <Link href={`/book/${currentlyReading.id}`}>
+                  <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50 line-clamp-2">
+                          {currentlyReading.title}
+                        </h3>
+                        <p className="text-stone-600 dark:text-stone-400 mt-1">
+                          {currentlyReading.author}
+                        </p>
+                        <p className="text-xs text-stone-500 dark:text-stone-500 mt-2">
+                          {currentlyReading.pages} pages
+                        </p>
                       </div>
-                    </Link>
-                  ) : (
-                    <div className="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-6 text-center">
-                      <p className="text-stone-600 dark:text-stone-400 mb-4">
-                        Pick your next book from the reading plan
-                      </p>
-                      <Link
-                        href="/plan"
-                        className="inline-block px-4 py-2 bg-teal-600 dark:bg-teal-500 text-white text-sm font-medium rounded hover:bg-teal-700 dark:hover:bg-teal-600 transition-colors"
-                      >
-                        View Reading Plan
-                      </Link>
+                      <div className="flex-shrink-0 w-3 h-3 bg-teal-500 rounded-full mt-1" />
                     </div>
-                  )}
-                </div>
-
-                {nextBook && (
-                  <div>
-                    <h2 className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50 mb-4">
-                      Up Next
-                    </h2>
-                    <Link href={`/book/${nextBook.id}`}>
-                      <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="min-w-0 flex-1">
-                            <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50 line-clamp-2">
-                              {nextBook.title}
-                            </h3>
-                            <p className="text-stone-600 dark:text-stone-400 mt-1">
-                              {nextBook.author}
-                            </p>
-                            <p className="text-xs text-stone-500 dark:text-stone-500 mt-2">
-                              {nextBook.pages} pages
-                            </p>
-                          </div>
-                          <div className="flex-shrink-0 w-3 h-3 bg-stone-300 dark:bg-stone-600 rounded-full mt-1" />
-                        </div>
-                      </div>
-                    </Link>
                   </div>
-                )}
-              </div>
+                </Link>
+              ) : (
+                <div className="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-6 text-center">
+                  <p className="text-stone-600 dark:text-stone-400 mb-4">
+                    Pick your next book from the reading plan
+                  </p>
+                  <Link
+                    href="/plan"
+                    className="inline-block px-4 py-2 bg-teal-600 dark:bg-teal-500 text-white text-sm font-medium rounded hover:bg-teal-700 dark:hover:bg-teal-600 transition-colors"
+                  >
+                    View Reading Plan
+                  </Link>
+                </div>
+              )}
             </section>
+
+            {/* Up Next */}
+            {nextBook && (
+              <section>
+                <h2 className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50 mb-4">
+                  Up Next
+                </h2>
+                <Link href={`/book/${nextBook.id}`}>
+                  <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-6 hover:shadow-md dark:hover:shadow-lg transition-shadow">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50 line-clamp-2">
+                          {nextBook.title}
+                        </h3>
+                        <p className="text-stone-600 dark:text-stone-400 mt-1">
+                          {nextBook.author}
+                        </p>
+                        <p className="text-xs text-stone-500 dark:text-stone-500 mt-2">
+                          {nextBook.pages} pages
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0 w-3 h-3 bg-stone-300 dark:bg-stone-600 rounded-full mt-1" />
+                    </div>
+                  </div>
+                </Link>
+              </section>
+            )}
 
             {/* Section Progress */}
             <section>
               <h2 className="font-serif text-lg font-semibold text-stone-900 dark:text-stone-50 mb-4">
                 Progress by Section
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-3">
                 {sections.map((section) => (
                   <SectionProgressLink
                     key={section.section_order}

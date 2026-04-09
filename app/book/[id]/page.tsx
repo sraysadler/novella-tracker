@@ -91,7 +91,7 @@ export default async function BookPage({
         </Link>
 
         {/* Main content */}
-        <div className="space-y-8 max-w-2xl">
+        <div className="space-y-8 max-w-2xl mx-auto">
           {/* Header: Title, author, rank, year */}
           <div>
             <h1 className="font-serif text-4xl font-bold text-stone-900 dark:text-stone-50 mb-2">
