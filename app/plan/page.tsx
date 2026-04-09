@@ -69,7 +69,7 @@ export default async function PlanPage() {
 
   return (
     <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 sm:px-6 py-12 pb-32 w-full">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-stone-50 mb-2">
           Reading Plan
         </h1>

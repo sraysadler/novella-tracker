@@ -182,7 +182,7 @@ export default function PlanAccordion({
               {/* Left: label + name + subtitle */}
               <div className="flex-1 min-w-0">
                 <SectionPill section={section} />
-                <p className="font-serif font-semibold text-sm text-stone-900 dark:text-stone-50 mt-0.5 leading-snug">
+                <p className="font-serif font-semibold text-base text-stone-900 dark:text-stone-50 mt-0.5 leading-snug">
                   {section.section_name}
                 </p>
                 <p className="text-xs italic text-stone-400 dark:text-stone-500 mt-0.5 leading-snug">

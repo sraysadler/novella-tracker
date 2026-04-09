@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --font-serif: var(--font-lora), Georgia, serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

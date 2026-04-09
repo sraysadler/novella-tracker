@@ -104,7 +104,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 sm:px-6 py-12 pb-32 w-full">
-      <div className="max-w-3xl mx-auto space-y-12">
+      <div className="max-w-6xl mx-auto space-y-12">
         {/* Header */}
         <div>
           <h1 className="font-serif text-4xl font-bold text-stone-900 dark:text-stone-50 mb-2">
