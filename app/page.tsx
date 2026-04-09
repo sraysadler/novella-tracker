@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
+import SectionProgressLink from "@/components/SectionProgressLink";
 import { supabase } from "@/lib/supabase";
 import type { Book, ReadingProgress, BookWithProgress } from "@/lib/types";
 
@@ -239,10 +240,9 @@ export default async function Home() {
               </h2>
               <div className="space-y-3">
                 {sections.map((section) => (
-                  <Link
+                  <SectionProgressLink
                     key={section.section_order}
-                    href="/plan"
-                    className="block"
+                    sectionOrder={section.section_order}
                   >
                     <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-4 hover:shadow-md dark:hover:shadow-lg transition-shadow">
                       <div className="flex items-start justify-between gap-4 mb-3">
@@ -267,7 +267,7 @@ export default async function Home() {
                         />
                       </div>
                     </div>
-                  </Link>
+                  </SectionProgressLink>
                 ))}
               </div>
             </section>
