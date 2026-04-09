@@ -147,7 +147,7 @@ export default function BookRow({
           <span className="font-medium text-sm text-stone-900 dark:text-stone-100 leading-snug">
             {book.title}
           </span>
-          <span className="text-stone-400 dark:text-stone-500 text-xs ml-2">
+          <span className="block text-xs text-stone-400 dark:text-stone-500 mt-0.5">
             {book.author}
           </span>
         </div>
@@ -159,7 +159,7 @@ export default function BookRow({
               title={book.film_adaptation}
               aria-label="Film adaptation exists"
             >
-              🎬
+              {'\u{1F3AC}\uFE0F'}
             </span>
           )}
           <span className="tabular-nums">{book.pages}p</span>
