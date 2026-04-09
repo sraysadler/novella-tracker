@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { SectionData } from "./page";
 import type { ReadingStatus } from "@/lib/types";
 import BookRow from "./BookRow";
@@ -83,11 +83,29 @@ export default function PlanAccordion({
   })();
 
   const [openSections, setOpenSections] = useState<Set<number>>(
-    () => new Set(defaultOpen !== undefined ? [defaultOpen] : [])
+    () => {
+      // Try to load from sessionStorage first
+      try {
+        const stored = sessionStorage.getItem("plan-open-sections");
+        if (stored) {
+          const parsed = JSON.parse(stored) as number[];
+          return new Set(parsed);
+        }
+      } catch {
+        // Ignore parse errors, fall through to default
+      }
+      return new Set(defaultOpen !== undefined ? [defaultOpen] : []);
+    }
   );
 
   // State to track status changes for optimistic updates
   const [sections, setSections] = useState(initialSections);
+
+  // Save to sessionStorage whenever openSections changes
+  useEffect(() => {
+    const openArray = Array.from(openSections);
+    sessionStorage.setItem("plan-open-sections", JSON.stringify(openArray));
+  }, [openSections]);
 
   function toggle(order: number) {
     setOpenSections((prev) => {
