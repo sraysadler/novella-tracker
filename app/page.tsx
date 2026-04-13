@@ -63,8 +63,9 @@ async function fetchDashboardData() {
     secondarySections.get(bs.book_id)!.push(bs.section_order);
   }
 
-  // Calculate section progress
+  // Calculate section progress (two passes so secondary memberships always find their section)
   const sectionsMap = new Map<number, SectionProgress>();
+  // Pass 1 — build sectionsMap metadata only (no counting)
   for (const book of booksWithProgress) {
     if (!sectionsMap.has(book.section_order)) {
       sectionsMap.set(book.section_order, {
@@ -74,20 +75,18 @@ async function fetchDashboardData() {
         read: 0,
       });
     }
-    const section = sectionsMap.get(book.section_order)!;
-    section.total++;
-    if (book.progress?.status === "read") {
-      section.read++;
-    }
+  }
+  // Pass 2 — count primary and secondary memberships
+  for (const book of booksWithProgress) {
+    const primary = sectionsMap.get(book.section_order)!;
+    primary.total++;
+    if (book.progress?.status === "read") primary.read++;
 
-    // Also increment secondary sections
     for (const secOrder of secondarySections.get(book.id) ?? []) {
-      if (!sectionsMap.has(secOrder)) continue; // section must exist from primary pass
-      const secSection = sectionsMap.get(secOrder)!;
-      secSection.total++;
-      if (book.progress?.status === "read") {
-        secSection.read++;
-      }
+      if (!sectionsMap.has(secOrder)) continue;
+      const sec = sectionsMap.get(secOrder)!;
+      sec.total++;
+      if (book.progress?.status === "read") sec.read++;
     }
   }
 
