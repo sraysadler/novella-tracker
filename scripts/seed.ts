@@ -44,6 +44,10 @@ const books = JSON.parse(
   readFileSync(resolve(process.cwd(), "data/books.json"), "utf-8")
 );
 
+const bookSections = JSON.parse(
+  readFileSync(resolve(process.cwd(), "data/book_sections.json"), "utf-8")
+);
+
 const progressRows = JSON.parse(
   readFileSync(resolve(process.cwd(), "data/initial_progress.json"), "utf-8")
 ).map((row: { book_id: number; status: string; date_started: string | null; date_completed: string | null }) => ({
@@ -57,13 +61,20 @@ const progressRows = JSON.parse(
 async function seed() {
   console.log("🌱 Starting seed...\n");
 
-  // Clear in dependency order (progress first, then books)
+  // Clear in dependency order
   console.log("  Clearing reading_progress...");
   const { error: clearProgressError } = await supabase
     .from("reading_progress")
     .delete()
-    .neq("id", 0); // delete all rows
+    .neq("id", 0);
   if (clearProgressError) throw clearProgressError;
+
+  console.log("  Clearing book_sections...");
+  const { error: clearSectionsError } = await supabase
+    .from("book_sections")
+    .delete()
+    .neq("id", 0);
+  if (clearSectionsError) throw clearSectionsError;
 
   console.log("  Clearing books...");
   const { error: clearBooksError } = await supabase
@@ -80,6 +91,14 @@ async function seed() {
     if (error) throw error;
   }
 
+  // Insert book_sections
+  console.log(`  Inserting ${bookSections.length} book_sections rows...`);
+  for (let i = 0; i < bookSections.length; i += 50) {
+    const batch = bookSections.slice(i, i + 50);
+    const { error } = await supabase.from("book_sections").insert(batch);
+    if (error) throw error;
+  }
+
   // Insert reading_progress in batches of 50
   console.log(`  Inserting ${progressRows.length} reading_progress rows...`);
   for (let i = 0; i < progressRows.length; i += 50) {
@@ -93,12 +112,17 @@ async function seed() {
     .from("books")
     .select("*", { count: "exact", head: true });
 
+  const { count: sectionsCount } = await supabase
+    .from("book_sections")
+    .select("*", { count: "exact", head: true });
+
   const { count: progressCount } = await supabase
     .from("reading_progress")
     .select("*", { count: "exact", head: true });
 
   console.log(`\n✅ Seed complete:`);
   console.log(`   books             → ${bookCount} rows`);
+  console.log(`   book_sections     → ${sectionsCount} rows`);
   console.log(`   reading_progress  → ${progressCount} rows`);
 }
 
