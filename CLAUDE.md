@@ -54,7 +54,12 @@ This project does NOT use a `src/` folder. Top-level structure:
   (use `IS NULL` for MVP).
 - Never assume a single user — the schema is designed for
   multi-user auth to be added later.
-
+- When creating new Supabase tables, always include
+  `ALTER TABLE <tablename> DISABLE ROW LEVEL SECURITY;`
+  immediately after the CREATE TABLE statement. RLS is enabled
+  by default and will silently block all API reads if no
+  policies are set.
+  
 ### Design
 - Clean, readable, book-friendly aesthetic
 - Warm neutral background (cream/off-white, not stark white)
