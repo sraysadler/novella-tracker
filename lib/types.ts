@@ -39,3 +39,10 @@ export interface ReadingProgress {
 export interface BookWithProgress extends Book {
   progress: ReadingProgress | null;
 }
+
+export type BookSection = {
+  id: number;
+  book_id: number;
+  section_order: number;
+  order_in_section: number;
+};
