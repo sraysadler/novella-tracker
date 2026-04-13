@@ -118,7 +118,7 @@ export default async function PlanPage() {
           Reading Plan
         </h1>
         <p className="text-sm text-stone-500 dark:text-stone-400 mb-10">
-          {totalRead} of 100 novellas read &middot; Quick Wins path &rarr; 10 theme clusters
+          {totalRead}{" "}of 100 novellas read &middot; Quick Wins path &rarr; 10 theme clusters
         </p>
 
         {sections.length === 0 ? (
