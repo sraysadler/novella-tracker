@@ -5,14 +5,22 @@ import { supabase } from "@/lib/supabase";
 import type { BookWithProgress } from "@/lib/types";
 import BookDetailClient from "./BookDetailClient";
 
-async function fetchBook(id: number): Promise<BookWithProgress | null> {
+async function fetchBook(
+  id: number
+): Promise<{ book: BookWithProgress; sectionNames: string[] } | null> {
   if (!supabase) return null;
 
-  const [{ data: books, error: booksError }, { data: progress }] =
-    await Promise.all([
-      supabase.from("books").select("*").eq("id", id).single(),
-      supabase.from("reading_progress").select("*").is("user_id", null),
-    ]);
+  const [
+    { data: books, error: booksError },
+    { data: progress },
+    { data: bookSections },
+    { data: allBooks },
+  ] = await Promise.all([
+    supabase.from("books").select("*").eq("id", id).single(),
+    supabase.from("reading_progress").select("*").is("user_id", null),
+    supabase.from("book_sections").select("*").eq("book_id", id),
+    supabase.from("books").select("section_order, section_name"),
+  ]);
 
   if (booksError || !books) return null;
 
@@ -20,10 +28,26 @@ async function fetchBook(id: number): Promise<BookWithProgress | null> {
     (progress ?? []).map((p: any) => [p.book_id, p])
   );
 
-  return {
+  const book: BookWithProgress = {
     ...books,
     progress: progressMap.get(books.id) ?? null,
   };
+
+  // Build deduplicated list of section names this book belongs to
+  const sectionNameMap = new Map<number, string>(
+    (allBooks ?? []).map((b: any) => [b.section_order, b.section_name])
+  );
+  const sectionOrdersSeen = new Set<number>([books.section_order]);
+  const sectionNames: string[] = [books.section_name];
+  for (const bs of bookSections ?? []) {
+    if (!sectionOrdersSeen.has(bs.section_order)) {
+      sectionOrdersSeen.add(bs.section_order);
+      const name = sectionNameMap.get(bs.section_order);
+      if (name) sectionNames.push(name);
+    }
+  }
+
+  return { book, sectionNames };
 }
 
 export default async function BookPage({
@@ -33,9 +57,9 @@ export default async function BookPage({
 }) {
   const { id } = await params;
   const bookId = parseInt(id, 10);
-  const book = await fetchBook(bookId);
+  const result = await fetchBook(bookId);
 
-  if (!book) {
+  if (!result) {
     return (
       <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 py-8">
         <div className="max-w-6xl mx-auto">
@@ -67,6 +91,8 @@ export default async function BookPage({
       </main>
     );
   }
+
+  const { book, sectionNames } = result;
 
   return (
     <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 sm:px-6 py-8 pb-32 w-full">
@@ -107,6 +133,12 @@ export default async function BookPage({
               <span>&middot;</span>
               <span>{book.pages} pages</span>
             </div>
+            {sectionNames.length > 1 && (
+              <p className="text-sm text-stone-600 dark:text-stone-400 mt-2">
+                Appears in:{" "}
+                {sectionNames.join(" · ")}
+              </p>
+            )}
           </div>
 
           {/* Film adaptation (if any) */}

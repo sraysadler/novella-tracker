@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import SectionProgressLink from "@/components/SectionProgressLink";
 import { supabase } from "@/lib/supabase";
-import type { Book, ReadingProgress, BookWithProgress } from "@/lib/types";
+import type { Book, ReadingProgress, BookWithProgress, BookSection } from "@/lib/types";
 
 type SectionProgress = {
   section_order: number;
@@ -21,15 +21,19 @@ async function fetchDashboardData() {
     };
   }
 
-  const [{ data: books, error: booksError }, { data: progress }] =
-    await Promise.all([
-      supabase
-        .from("books")
-        .select("*")
-        .order("section_order", { ascending: true })
-        .order("order_in_section", { ascending: true }),
-      supabase.from("reading_progress").select("*").is("user_id", null),
-    ]);
+  const [
+    { data: books, error: booksError },
+    { data: progress },
+    { data: bookSections },
+  ] = await Promise.all([
+    supabase
+      .from("books")
+      .select("*")
+      .order("section_order", { ascending: true })
+      .order("order_in_section", { ascending: true }),
+    supabase.from("reading_progress").select("*").is("user_id", null),
+    supabase.from("book_sections").select("*"),
+  ]);
 
   if (booksError || !books) {
     return {
@@ -50,6 +54,15 @@ async function fetchDashboardData() {
     })
   );
 
+  // Build a map of book_id -> secondary section_orders from book_sections
+  const secondarySections = new Map<number, number[]>();
+  for (const bs of (bookSections ?? []) as BookSection[]) {
+    if (!secondarySections.has(bs.book_id)) {
+      secondarySections.set(bs.book_id, []);
+    }
+    secondarySections.get(bs.book_id)!.push(bs.section_order);
+  }
+
   // Calculate section progress
   const sectionsMap = new Map<number, SectionProgress>();
   for (const book of booksWithProgress) {
@@ -65,6 +78,16 @@ async function fetchDashboardData() {
     section.total++;
     if (book.progress?.status === "read") {
       section.read++;
+    }
+
+    // Also increment secondary sections
+    for (const secOrder of secondarySections.get(book.id) ?? []) {
+      if (!sectionsMap.has(secOrder)) continue; // section must exist from primary pass
+      const secSection = sectionsMap.get(secOrder)!;
+      secSection.total++;
+      if (book.progress?.status === "read") {
+        secSection.read++;
+      }
     }
   }
 
