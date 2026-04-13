@@ -35,3 +35,6 @@
 - Fixed page centering (removed CSS reset overriding Tailwind mx-auto)
 - Fixed dropdown clipping by section containers (z-index fix)
 - Fixed status controls visual update on book detail page (optimistic state)
+
+## Phase 3
+- [ ] Task 32: Custom books ("My Other Reads") — track books outside the curated 100
