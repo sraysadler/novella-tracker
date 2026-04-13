@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { supabase } from "@/lib/supabase";
-import type { Book, ReadingProgress, BookWithProgress } from "@/lib/types";
+import type { Book, ReadingProgress, BookWithProgress, BookSection } from "@/lib/types";
 import PlanAccordion from "./PlanAccordion";
 
 export type SectionData = {
@@ -17,7 +17,7 @@ export type SectionData = {
 async function fetchSections(): Promise<SectionData[]> {
   if (!supabase) return [];
 
-  const [{ data: books, error: booksError }, { data: progress }] =
+  const [{ data: books, error: booksError }, { data: progress }, { data: bookSections }] =
     await Promise.all([
       supabase
         .from("books")
@@ -25,6 +25,7 @@ async function fetchSections(): Promise<SectionData[]> {
         .order("section_order", { ascending: true })
         .order("order_in_section", { ascending: true }),
       supabase.from("reading_progress").select("*").is("user_id", null),
+      supabase.from("book_sections").select("*"),
     ]);
 
   if (booksError || !books) return [];
@@ -33,16 +34,19 @@ async function fetchSections(): Promise<SectionData[]> {
     (progress ?? []).map((p: ReadingProgress) => [p.book_id, p])
   );
 
-  const booksWithProgress: BookWithProgress[] = (books as Book[]).map(
-    (book) => ({
+  const booksWithProgress = new Map<number, BookWithProgress>();
+  for (const book of books as Book[]) {
+    booksWithProgress.set(book.id, {
       ...book,
       progress: progressMap.get(book.id) ?? null,
-    })
-  );
+    });
+  }
 
+  // section_order -> SectionData (metadata only, no books yet)
   const sectionsMap = new Map<number, SectionData>();
 
-  for (const book of booksWithProgress) {
+  // Add primary section entries from books table
+  for (const book of booksWithProgress.values()) {
     if (!sectionsMap.has(book.section_order)) {
       sectionsMap.set(book.section_order, {
         section_order: book.section_order,
@@ -53,10 +57,50 @@ async function fetchSections(): Promise<SectionData[]> {
         books: [],
       });
     }
-    sectionsMap.get(book.section_order)!.books.push(book);
   }
 
-  return Array.from(sectionsMap.values());
+  // Build a list of (section_order, order_in_section, BookWithProgress) entries
+  type BookPlacement = { section_order: number; order_in_section: number; book: BookWithProgress };
+  const placements: BookPlacement[] = [];
+
+  // Primary memberships
+  for (const book of booksWithProgress.values()) {
+    placements.push({
+      section_order: book.section_order,
+      order_in_section: book.order_in_section,
+      book,
+    });
+  }
+
+  // Secondary memberships from book_sections
+  for (const bs of (bookSections ?? []) as BookSection[]) {
+    const book = booksWithProgress.get(bs.book_id);
+    if (!book) continue;
+    // Section metadata must come from the book that primarily owns this section_order,
+    // or we may need to find it. We only add the section to the map if already present
+    // (all sections should already be seeded via primary memberships).
+    placements.push({
+      section_order: bs.section_order,
+      order_in_section: bs.order_in_section,
+      book,
+    });
+  }
+
+  // Sort placements and distribute into sections
+  placements.sort((a, b) =>
+    a.section_order !== b.section_order
+      ? a.section_order - b.section_order
+      : a.order_in_section - b.order_in_section
+  );
+
+  for (const section of sectionsMap.values()) {
+    section.books = [];
+  }
+  for (const { section_order, book } of placements) {
+    sectionsMap.get(section_order)?.books.push(book);
+  }
+
+  return Array.from(sectionsMap.values()).sort((a, b) => a.section_order - b.section_order);
 }
 
 export default async function PlanPage() {
