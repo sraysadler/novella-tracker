@@ -38,3 +38,8 @@
 
 ## Phase 3
 - [ ] Task 32: Custom books ("My Other Reads") — track books outside the curated 100
+
+## Bug Fixes (post-MVP, not blocking)
+- [ ] "Appears in" missing on book detail page for cluster-only books
+- [ ] "Back to Reading Plan" link doesn't preserve scroll position
+- [ ] /plan subtitle double-counts books with secondary memberships
