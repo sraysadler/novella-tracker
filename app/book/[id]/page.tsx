@@ -133,7 +133,7 @@ export default async function BookPage({
               <span>&middot;</span>
               <span>{book.pages} pages</span>
             </div>
-            {sectionNames.length > 1 && (
+            {sectionNames.length > 0 && (
               <p className="text-sm text-stone-600 dark:text-stone-400 mt-2">
                 Appears in:{" "}
                 {sectionNames.join(" · ")}
