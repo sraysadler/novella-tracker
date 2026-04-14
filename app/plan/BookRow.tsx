@@ -141,6 +141,9 @@ export default function BookRow({
       <Link
         href={`/book/${book.id}`}
         className="flex items-center gap-3 flex-1 min-w-0 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors -mx-4 px-4 py-2.5 -my-2.5"
+        onClick={() => {
+          sessionStorage.setItem("plan-scroll-y", String(window.scrollY));
+        }}
       >
         {/* Title + author */}
         <div className="flex-1 min-w-0">

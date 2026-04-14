@@ -98,8 +98,15 @@ export default function PlanAccordion({
     }
   );
 
-  // Scroll to the target section when arriving from dashboard link
+  // Restore scroll position when returning from a book detail page
   useEffect(() => {
+    const savedY = sessionStorage.getItem("plan-scroll-y");
+    if (savedY) {
+      window.scrollTo({ top: parseInt(savedY), behavior: "instant" });
+      sessionStorage.removeItem("plan-scroll-y");
+      return;
+    }
+    // Scroll to the target section when arriving from dashboard link
     try {
       const stored = sessionStorage.getItem("plan-open-sections");
       if (stored) {
