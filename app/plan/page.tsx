@@ -106,10 +106,13 @@ async function fetchSections(): Promise<SectionData[]> {
 export default async function PlanPage() {
   const sections = await fetchSections();
 
-  const totalRead = sections.reduce(
-    (sum, s) => sum + s.books.filter((b) => b.progress?.status === "read").length,
-    0
+  const readBookIds = new Set(
+    sections
+      .flatMap((s) => s.books)
+      .filter((b) => b.progress?.status === "read")
+      .map((b) => b.id)
   );
+  const totalRead = readBookIds.size;
 
   return (
     <main className="min-h-screen bg-stone-50 dark:bg-stone-950 px-4 sm:px-6 py-12 pb-32 w-full">
