@@ -1,7 +1,8 @@
 // Always fetch fresh — this page reads live reading progress.
 export const dynamic = "force-dynamic";
 
-import { supabase } from "@/lib/supabase";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import type { Book, ReadingProgress, BookWithProgress, BookSection } from "@/lib/types";
 import PlanAccordion from "./PlanAccordion";
 
@@ -15,7 +16,9 @@ export type SectionData = {
 };
 
 async function fetchSections(): Promise<SectionData[]> {
-  if (!supabase) return [];
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
 
   const [{ data: books, error: booksError }, { data: progress }, { data: bookSections }] =
     await Promise.all([
@@ -24,7 +27,7 @@ async function fetchSections(): Promise<SectionData[]> {
         .select("*")
         .order("section_order", { ascending: true })
         .order("order_in_section", { ascending: true }),
-      supabase.from("reading_progress").select("*").is("user_id", null),
+      supabase.from("reading_progress").select("*").eq("user_id", user.id),
       supabase.from("book_sections").select("*"),
     ]);
 

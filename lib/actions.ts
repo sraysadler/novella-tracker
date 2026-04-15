@@ -17,6 +17,7 @@ export async function updateReadingStatus(
   bookId: number,
   newStatus: ReadingStatus
 ): Promise<UpdateProgressResult> {
+
   try {
     const supabase = await createClient();
 
