@@ -17,11 +17,18 @@ export async function updateReadingStatus(
   bookId: number,
   newStatus: ReadingStatus
 ): Promise<UpdateProgressResult> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Not authenticated" };
 
   try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { success: false, error: "Not authenticated" };
+    }
+
     // Fetch current progress to know what we're changing from
     const { data: currentProgress, error: fetchError } = await supabase
       .from("reading_progress")
@@ -38,7 +45,7 @@ export async function updateReadingStatus(
     const now = new Date().toISOString();
 
     // Build the update object
-    const updateObj: Record<string, any> = { status: newStatus };
+    const updateObj: Record<string, unknown> = { status: newStatus };
 
     // Handle date_started
     if (newStatus === "reading" && oldStatus !== "reading") {
@@ -91,6 +98,7 @@ export async function updateReadingStatus(
       .eq("user_id", user.id);
 
     if (updateError) {
+      console.error("Status update error:", updateError);
       return { success: false, error: updateError.message };
     }
 
