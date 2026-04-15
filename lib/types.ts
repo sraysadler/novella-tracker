@@ -1,3 +1,5 @@
+export type UserRole = 'user' | 'editor' | 'admin';
+
 export type SectionType = "quick_wins" | "cluster";
 
 export type ReadingStatus = "not_started" | "reading" | "read";
