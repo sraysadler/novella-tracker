@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Lora } from "next/font/google";
 import "./globals.css";
 import { createClient } from "@/lib/supabase/server";
 import SignOutButton from "@/components/SignOutButton";
+import { getUserRole } from "@/lib/role";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,12 +32,24 @@ export default async function RootLayout({
 }>) {
   const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
+  const role = session ? await getUserRole() : null;
+  console.log('User role:', role);
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${lora.variable}`}>
       <body>
         {session && (
-          <div className="fixed top-3 right-4 z-50">
+          <div className="fixed top-3 right-4 z-50 flex items-center gap-3">
+            {role === 'admin' && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-red-900 text-red-100 font-medium">
+                Admin
+              </span>
+            )}
+            {role === 'editor' && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-800 text-blue-100 font-medium">
+                Editor
+              </span>
+            )}
             <SignOutButton />
           </div>
         )}
