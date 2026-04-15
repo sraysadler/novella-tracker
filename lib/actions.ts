@@ -1,6 +1,6 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import type { ReadingStatus } from "@/lib/types";
 
 export interface UpdateProgressResult {
@@ -17,9 +17,9 @@ export async function updateReadingStatus(
   bookId: number,
   newStatus: ReadingStatus
 ): Promise<UpdateProgressResult> {
-  if (!supabase) {
-    return { success: false, error: "Database not available" };
-  }
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Not authenticated" };
 
   try {
     // Fetch current progress to know what we're changing from
@@ -27,7 +27,7 @@ export async function updateReadingStatus(
       .from("reading_progress")
       .select("*")
       .eq("book_id", bookId)
-      .is("user_id", null)
+      .eq("user_id", user.id)
       .single();
 
     if (fetchError || !currentProgress) {
@@ -60,7 +60,7 @@ export async function updateReadingStatus(
         .from("reading_progress")
         .select("book_id")
         .eq("status", "reading")
-        .is("user_id", null)
+        .eq("user_id", user.id)
         .neq("book_id", bookId)
         .single();
 
@@ -72,7 +72,7 @@ export async function updateReadingStatus(
             date_started: null,
           })
           .eq("book_id", otherReading.book_id)
-          .is("user_id", null);
+          .eq("user_id", user.id);
 
         if (updateError) {
           return {
@@ -88,7 +88,7 @@ export async function updateReadingStatus(
       .from("reading_progress")
       .update(updateObj)
       .eq("book_id", bookId)
-      .is("user_id", null);
+      .eq("user_id", user.id);
 
     if (updateError) {
       return { success: false, error: updateError.message };

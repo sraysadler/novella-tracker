@@ -1,14 +1,17 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import type { BookWithProgress } from "@/lib/types";
 import BookDetailClient from "./BookDetailClient";
 
 async function fetchBook(
   id: number
 ): Promise<{ book: BookWithProgress; sectionNames: string[] } | null> {
-  if (!supabase) return null;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
 
   const [
     { data: books, error: booksError },
@@ -17,7 +20,7 @@ async function fetchBook(
     { data: allBooks },
   ] = await Promise.all([
     supabase.from("books").select("*").eq("id", id).single(),
-    supabase.from("reading_progress").select("*").is("user_id", null),
+    supabase.from("reading_progress").select("*").eq("user_id", user.id),
     supabase.from("book_sections").select("*").eq("book_id", id),
     supabase.from("books").select("section_order, section_name"),
   ]);
