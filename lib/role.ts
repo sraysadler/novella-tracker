@@ -1,9 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { UserRole } from "@/lib/types";
 
-export async function getUserRole(): Promise<string | null> {
-  const supabase = await createClient();
+export async function getUserRole(supabase: SupabaseClient): Promise<UserRole | null> {
   const { data: { user } } = await supabase.auth.getUser();
-
   if (!user) return null;
 
   const { data, error } = await supabase
@@ -12,10 +11,16 @@ export async function getUserRole(): Promise<string | null> {
     .eq("id", user.id)
     .single();
 
-  if (error) {
-    console.error("getUserRole error:", error.message);
-    return null;
-  }
+  if (error || !data) return null;
+  return data.role as UserRole;
+}
 
-  return data?.role ?? null;
+export async function isAdmin(supabase: SupabaseClient): Promise<boolean> {
+  const role = await getUserRole(supabase);
+  return role === "admin";
+}
+
+export async function isEditor(supabase: SupabaseClient): Promise<boolean> {
+  const role = await getUserRole(supabase);
+  return role === "editor" || role === "admin";
 }

@@ -32,24 +32,20 @@ export default async function RootLayout({
 }>) {
   const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
-  const role = session ? await getUserRole() : null;
-  console.log('User role:', role);
+  const role = session ? await getUserRole(supabase) : null;
+
+  const roleBadge = role === "admin"
+    ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-900/80 text-red-100">Admin</span>
+    : role === "editor"
+    ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-800/70 text-blue-100">Editor</span>
+    : null;
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${lora.variable}`}>
       <body>
         {session && (
-          <div className="fixed top-3 right-4 z-50 flex items-center gap-3">
-            {role === 'admin' && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-red-900 text-red-100 font-medium">
-                Admin
-              </span>
-            )}
-            {role === 'editor' && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-800 text-blue-100 font-medium">
-                Editor
-              </span>
-            )}
+          <div className="fixed top-3 right-4 z-50 flex items-center gap-2">
+            {roleBadge}
             <SignOutButton />
           </div>
         )}
