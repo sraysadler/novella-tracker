@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { SectionData } from "./page";
-import type { ReadingStatus } from "@/lib/types";
+import type { ReadingStatus, BookWithProgress } from "@/lib/types";
 import BookRow from "./BookRow";
 
 // ---------------------------------------------------------------------------
@@ -71,8 +71,10 @@ function ProgressBar({ read, total }: { read: number; total: number }) {
 // ---------------------------------------------------------------------------
 export default function PlanAccordion({
   sections: initialSections,
+  extraBooks: initialExtraBooks = [],
 }: {
   sections: SectionData[];
+  extraBooks?: BookWithProgress[];
 }) {
   // Default-open: the section containing a "reading" book, or the first section
   const defaultOpen = (() => {
@@ -125,6 +127,8 @@ export default function PlanAccordion({
 
   // State to track status changes for optimistic updates
   const [sections, setSections] = useState(initialSections);
+  const [extraBooks, setExtraBooks] = useState(initialExtraBooks);
+  const [extraOpen, setExtraOpen] = useState(false);
 
   // Save to sessionStorage whenever openSections changes
   useEffect(() => {
@@ -142,27 +146,29 @@ export default function PlanAccordion({
   }
 
   function handleStatusChange(bookId: number, newStatus: ReadingStatus) {
+    function updateBook(book: BookWithProgress) {
+      if (book.id === bookId) {
+        return {
+          ...book,
+          progress: book.progress ? { ...book.progress, status: newStatus } : null,
+        };
+      }
+      if (newStatus === "reading" && book.progress?.status === "reading") {
+        return {
+          ...book,
+          progress: book.progress ? { ...book.progress, status: "not_started" } : null,
+        };
+      }
+      return book;
+    }
+
     setSections((prev) =>
       prev.map((section) => ({
         ...section,
-        books: section.books.map((book) => {
-          if (book.id === bookId) {
-            return {
-              ...book,
-              progress: book.progress ? { ...book.progress, status: newStatus } : null,
-            };
-          }
-          // If changing this book to "reading", change any other "reading" book to "not_started"
-          if (newStatus === "reading" && book.progress?.status === "reading") {
-            return {
-              ...book,
-              progress: book.progress ? { ...book.progress, status: "not_started" } : null,
-            };
-          }
-          return book;
-        }),
+        books: section.books.map(updateBook),
       }))
     );
+    setExtraBooks((prev) => prev.map(updateBook));
   }
 
   return (
@@ -239,6 +245,43 @@ export default function PlanAccordion({
           </div>
         );
       })}
+
+      {/* ── Additional Reads section ── */}
+      {extraBooks.length > 0 && (
+        <div
+          id="section-extra"
+          className="rounded-xl border border-stone-200 dark:border-stone-700/60 bg-stone-50 dark:bg-stone-900"
+        >
+          <button
+            onClick={() => setExtraOpen((prev) => !prev)}
+            className="w-full flex items-start justify-between gap-3 px-4 py-4 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200/70 dark:hover:bg-stone-700/60 transition-colors text-left"
+            aria-expanded={extraOpen}
+          >
+            <div className="flex-1 min-w-0">
+              <p className="font-serif font-semibold text-base text-stone-900 dark:text-stone-50 mt-0.5 leading-snug">
+                Additional Reads
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 pt-0.5">
+              <Chevron open={extraOpen} />
+            </div>
+          </button>
+
+          {extraOpen && (
+            <ul role="list">
+              {extraBooks.map((book, idx) => (
+                <li key={book.id}>
+                  <BookRow
+                    book={book}
+                    isFirst={idx === 0}
+                    onStatusChange={handleStatusChange}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 }

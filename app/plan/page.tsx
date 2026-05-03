@@ -15,7 +15,12 @@ export type SectionData = {
   books: BookWithProgress[];
 };
 
-async function fetchSections(): Promise<SectionData[]> {
+type FetchResult = {
+  sections: SectionData[];
+  extraBooks: BookWithProgress[];
+};
+
+async function fetchSections(): Promise<FetchResult> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
@@ -31,31 +36,38 @@ async function fetchSections(): Promise<SectionData[]> {
       supabase.from("book_sections").select("*"),
     ]);
 
-  if (booksError || !books) return [];
+  if (booksError || !books) return { sections: [], extraBooks: [] };
 
   const progressMap = new Map<number, ReadingProgress>(
     (progress ?? []).map((p: ReadingProgress) => [p.book_id, p])
   );
 
   const booksWithProgress = new Map<number, BookWithProgress>();
+  const extraBooks: BookWithProgress[] = [];
+
   for (const book of books as Book[]) {
-    booksWithProgress.set(book.id, {
+    const bwp: BookWithProgress = {
       ...book,
       progress: progressMap.get(book.id) ?? null,
-    });
+    };
+    if (book.section_type === null) {
+      extraBooks.push(bwp);
+    } else {
+      booksWithProgress.set(book.id, bwp);
+    }
   }
 
   // section_order -> SectionData (metadata only, no books yet)
   const sectionsMap = new Map<number, SectionData>();
 
-  // Add primary section entries from books table
+  // Add primary section entries from books table (extra-list books excluded above)
   for (const book of booksWithProgress.values()) {
     if (!sectionsMap.has(book.section_order)) {
       sectionsMap.set(book.section_order, {
         section_order: book.section_order,
         section_name: book.section_name,
         section_subtitle: book.section_subtitle,
-        section_type: book.section_type,
+        section_type: book.section_type as "quick_wins" | "cluster",
         cluster_vibe: book.cluster_vibe,
         books: [],
       });
@@ -103,12 +115,16 @@ async function fetchSections(): Promise<SectionData[]> {
     sectionsMap.get(section_order)?.books.push(book);
   }
 
-  return Array.from(sectionsMap.values()).sort((a, b) => a.section_order - b.section_order);
+  return {
+    sections: Array.from(sectionsMap.values()).sort((a, b) => a.section_order - b.section_order),
+    extraBooks,
+  };
 }
 
 export default async function PlanPage() {
-  const sections = await fetchSections();
+  const { sections, extraBooks } = await fetchSections();
 
+  // Only count list books (rank !== null) toward the 100-book total
   const readBookIds = new Set(
     sections
       .flatMap((s) => s.books)
@@ -132,7 +148,7 @@ export default async function PlanPage() {
             No data yet — run <code className="font-mono bg-stone-100 dark:bg-stone-800 px-1 rounded">npm run seed</code> to populate the database.
           </p>
         ) : (
-          <PlanAccordion sections={sections} />
+          <PlanAccordion sections={sections} extraBooks={extraBooks} />
         )}
       </div>
     </main>
