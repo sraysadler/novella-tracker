@@ -1598,5 +1598,37 @@
     "section_subtitle": "Satire, wit, social comedy, and the pleasure of watching a brilliant writer skewer the world. These are the funny ones — or at least the wickedly smart ones.",
     "cluster_vibe": "A raised eyebrow. A glass of champagne. Laughing at something you probably shouldn't.",
     "order_in_section": 5
+  },
+  {
+    "id": 101,
+    "rank": null,
+    "title": "Small Things Like These",
+    "author": "Claire Keegan",
+    "year": 2021,
+    "pages": 128,
+    "notes": "A coal merchant in 1980s Ireland confronts the town's dark secrets in the weeks before Christmas. Quiet, devastating, morally precise.",
+    "film_adaptation": "2024 film directed by Tim Mielants, starring Cillian Murphy (who also produced). Premiered at the Berlin International Film Festival.",
+    "section_type": null,
+    "section_name": null,
+    "section_order": null,
+    "section_subtitle": null,
+    "cluster_vibe": null,
+    "order_in_section": null
+  },
+  {
+    "id": 102,
+    "rank": null,
+    "title": "All My Friends Are Superheroes",
+    "author": "Andrew Kaufman",
+    "year": 2003,
+    "pages": 111,
+    "notes": "A man invisible to his wife — who can't remember they're married — has one cross-country flight to make her see him again. Whimsical, warm, and surprisingly moving.",
+    "film_adaptation": null,
+    "section_type": null,
+    "section_name": null,
+    "section_order": null,
+    "section_subtitle": null,
+    "cluster_vibe": null,
+    "order_in_section": null
   }
 ]
