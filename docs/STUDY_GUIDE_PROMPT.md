@@ -10,7 +10,11 @@ study guide for a first-time reader of this author. Before building
 the guide, search the web for critical essays, reviews, and scholarly 
 commentary on the book to supplement what's in the text itself — so 
 the guide reflects not just what happens in the book but how critics, 
-scholars, and the author have talked about it. For each chapter 
+scholars, and the author have talked about it. Begin the guide with a 
+brief "How to Use This Guide" note explaining that each chapter section 
+should be read before reading that chapter in the book, and that the 
+"Thought to Carry" at the end of each section is meant to be held in 
+mind while reading. For each chapter 
 include: a plain-language summary of what happens, an explanation of 
 why it matters (themes, symbolism, what the author is quietly doing 
 with the prose and structure), a flag for any passages or moments I 
