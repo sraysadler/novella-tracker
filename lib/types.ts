@@ -8,14 +8,14 @@ export type StudyGuideSource = "pdf" | "ai_knowledge";
 
 export interface Book {
   id: number;
-  rank: number;
+  rank: number | null;
   title: string;
   author: string;
   year: number;
   pages: number;
   notes: string;
   film_adaptation: string | null;
-  section_type: SectionType;
+  section_type: SectionType | null;
   section_name: string;
   section_order: number;
   section_subtitle: string;

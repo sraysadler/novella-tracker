@@ -57,9 +57,11 @@ async function fetchDashboardData() {
   }
 
   // Calculate section progress (two passes so secondary memberships always find their section)
+  // Extra-list books (rank === null) are excluded from sections entirely.
   const sectionsMap = new Map<number, SectionProgress>();
   // Pass 1 — build sectionsMap metadata only (no counting)
   for (const book of booksWithProgress) {
+    if (book.rank === null) continue;
     if (!sectionsMap.has(book.section_order)) {
       sectionsMap.set(book.section_order, {
         section_order: book.section_order,
@@ -71,6 +73,7 @@ async function fetchDashboardData() {
   }
   // Pass 2 — count primary and secondary memberships
   for (const book of booksWithProgress) {
+    if (book.rank === null) continue;
     const primary = sectionsMap.get(book.section_order)!;
     primary.total++;
     if (book.progress?.status === "read") primary.read++;
@@ -95,9 +98,10 @@ async function fetchDashboardData() {
 export default async function Home() {
   const { books, sections } = await fetchDashboardData();
 
-  // Calculate stats
-  const totalRead = books.filter((b) => b.progress?.status === "read").length;
-  const totalPages = books
+  // Calculate stats — only count list books (rank !== null)
+  const listBooks = books.filter((b) => b.rank !== null);
+  const totalRead = listBooks.filter((b) => b.progress?.status === "read").length;
+  const totalPages = listBooks
     .filter((b) => b.progress?.status === "read")
     .reduce((sum, b) => sum + b.pages, 0);
 
