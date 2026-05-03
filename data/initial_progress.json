@@ -98,5 +98,7 @@
   { "book_id": 97, "status": "not_started", "date_started": null, "date_completed": null },
   { "book_id": 98, "status": "not_started", "date_started": null, "date_completed": null },
   { "book_id": 99, "status": "not_started", "date_started": null, "date_completed": null },
-  { "book_id": 100, "status": "not_started", "date_started": null, "date_completed": null }
+  { "book_id": 100, "status": "not_started", "date_started": null, "date_completed": null },
+  { "book_id": 101, "status": "read", "date_started": null, "date_completed": null },
+  { "book_id": 102, "status": "read", "date_started": null, "date_completed": null }
 ]
