@@ -146,17 +146,17 @@ export default function PlanAccordion({
   }
 
   function handleStatusChange(bookId: number, newStatus: ReadingStatus) {
-    function updateBook(book: BookWithProgress) {
+    function updateBook(book: BookWithProgress): BookWithProgress {
       if (book.id === bookId) {
         return {
           ...book,
-          progress: book.progress ? { ...book.progress, status: newStatus } : null,
+          progress: book.progress ? { ...book.progress, status: newStatus } as typeof book.progress : null,
         };
       }
       if (newStatus === "reading" && book.progress?.status === "reading") {
         return {
           ...book,
-          progress: book.progress ? { ...book.progress, status: "not_started" } : null,
+          progress: book.progress ? { ...book.progress, status: "not_started" as ReadingStatus } as typeof book.progress : null,
         };
       }
       return book;
