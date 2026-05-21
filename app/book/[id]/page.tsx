@@ -41,7 +41,12 @@ async function fetchBook(
     (allBooks ?? []).map((b: any) => [b.section_order, b.section_name])
   );
   const sectionOrdersSeen = new Set<number>([books.section_order]);
-  const sectionNames: string[] = [books.section_name];
+  // Additional Reads books have no section_name; label them explicitly
+  const sectionNames: string[] = books.section_name
+    ? [books.section_name]
+    : books.section_type === null
+    ? ["Additional Reads"]
+    : [];
   for (const bs of bookSections ?? []) {
     if (!sectionOrdersSeen.has(bs.section_order)) {
       sectionOrdersSeen.add(bs.section_order);
@@ -130,8 +135,12 @@ export default async function BookPage({
               {book.author}
             </p>
             <div className="flex flex-wrap gap-4 text-sm text-stone-600 dark:text-stone-400">
-              <span>#{book.rank} on the master list</span>
-              <span>&middot;</span>
+              {book.rank !== null && (
+                <>
+                  <span>#{book.rank} on the master list</span>
+                  <span>&middot;</span>
+                </>
+              )}
               <span>Published {book.year}</span>
               <span>&middot;</span>
               <span>{book.pages} pages</span>
