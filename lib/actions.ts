@@ -29,36 +29,40 @@ export async function updateReadingStatus(
       return { success: false, error: "Not authenticated" };
     }
 
-    // Fetch current progress to know what we're changing from
-    const { data: currentProgress, error: fetchError } = await supabase
+    // Fetch current progress to know what we're changing from (may not exist yet)
+    const { data: currentProgress } = await supabase
       .from("reading_progress")
       .select("*")
       .eq("book_id", bookId)
       .eq("user_id", user.id)
       .single();
 
-    if (fetchError || !currentProgress) {
-      return { success: false, error: "Book progress not found" };
-    }
-
-    const oldStatus = currentProgress.status as ReadingStatus;
+    const oldStatus = (currentProgress?.status ?? "not_started") as ReadingStatus;
     const now = new Date().toISOString();
 
-    // Build the update object
-    const updateObj: Record<string, unknown> = { status: newStatus };
+    // Build the upsert object
+    const upsertObj: Record<string, unknown> = {
+      book_id: bookId,
+      user_id: user.id,
+      status: newStatus,
+    };
 
     // Handle date_started
     if (newStatus === "reading" && oldStatus !== "reading") {
-      updateObj.date_started = now;
+      upsertObj.date_started = now;
     } else if (newStatus !== "reading" && oldStatus === "reading") {
-      updateObj.date_started = null;
+      upsertObj.date_started = null;
+    } else {
+      upsertObj.date_started = currentProgress?.date_started ?? null;
     }
 
     // Handle date_completed
     if (newStatus === "read" && oldStatus !== "read") {
-      updateObj.date_completed = now;
+      upsertObj.date_completed = now;
     } else if (newStatus !== "read" && oldStatus === "read") {
-      updateObj.date_completed = null;
+      upsertObj.date_completed = null;
+    } else {
+      upsertObj.date_completed = currentProgress?.date_completed ?? null;
     }
 
     // If changing to "reading", find any other "reading" book and change it to "not_started"
@@ -90,16 +94,14 @@ export async function updateReadingStatus(
       }
     }
 
-    // Update the target book
-    const { error: updateError } = await supabase
+    // Upsert — creates the row if it doesn't exist yet
+    const { error: upsertError } = await supabase
       .from("reading_progress")
-      .update(updateObj)
-      .eq("book_id", bookId)
-      .eq("user_id", user.id);
+      .upsert(upsertObj, { onConflict: "user_id,book_id" });
 
-    if (updateError) {
-      console.error("Status update error:", updateError);
-      return { success: false, error: updateError.message };
+    if (upsertError) {
+      console.error("Status update error:", upsertError);
+      return { success: false, error: upsertError.message };
     }
 
     return { success: true };

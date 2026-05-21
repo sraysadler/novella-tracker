@@ -10,7 +10,6 @@ INSERT INTO books (
   103, NULL, 'The Yellow Wallpaper', 'Charlotte Perkins Gilman', 1892, 64,
   'A woman confined to her room by her physician husband slowly unravels — or sees through the wallpaper to something real. One of the great feminist horror stories, written from inside a breakdown.',
   NULL, NULL, NULL, NULL, NULL, NULL, NULL
-);
-
-INSERT INTO reading_progress (book_id, user_id, status, date_started, date_completed)
-VALUES (103, NULL, 'not_started', NULL, NULL);
+)
+ON CONFLICT (id) DO NOTHING;
+-- reading_progress rows are created on first status change via upsert in the app.
