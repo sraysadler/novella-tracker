@@ -1630,5 +1630,21 @@
     "section_subtitle": null,
     "cluster_vibe": null,
     "order_in_section": null
+  },
+  {
+    "id": 103,
+    "rank": null,
+    "title": "The Yellow Wallpaper",
+    "author": "Charlotte Perkins Gilman",
+    "year": 1892,
+    "pages": 64,
+    "notes": "A woman confined to her room by her physician husband slowly unravels — or sees through the wallpaper to something real. One of the great feminist horror stories, written from inside a breakdown.",
+    "film_adaptation": null,
+    "section_type": null,
+    "section_name": null,
+    "section_order": null,
+    "section_subtitle": null,
+    "cluster_vibe": null,
+    "order_in_section": null
   }
 ]
