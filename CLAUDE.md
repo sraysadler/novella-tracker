@@ -54,11 +54,13 @@ This project does NOT use a `src/` folder. Top-level structure:
   (use `IS NULL` for MVP).
 - Never assume a single user — the schema is designed for
   multi-user auth to be added later.
-- When creating new Supabase tables, always include
-  `ALTER TABLE <tablename> DISABLE ROW LEVEL SECURITY;`
-  immediately after the CREATE TABLE statement. RLS is enabled
-  by default and will silently block all API reads if no
-  policies are set.
+- When creating new Supabase tables, always enable RLS and add
+  explicit policies. Do NOT disable RLS — that silently exposes
+  all rows to any anon request. Instead, add policies for each
+  access pattern (e.g. anon read, authenticated read-own-row).
+  - Public/static tables (e.g. `books`): `TO anon USING (true)` for SELECT.
+  - Auth-gated tables (e.g. `profiles`): `TO authenticated USING (id = auth.uid())`.
+  - MVP tables with nullable user_id: `TO anon USING (true)` for SELECT/UPDATE.
   
 ### Design
 - Clean, readable, book-friendly aesthetic
