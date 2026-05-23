@@ -50,6 +50,16 @@ export default async function RootLayout({
           </div>
         )}
         {children}
+        <footer className="border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 py-6 px-4 sm:px-6">
+          <div className="max-w-5xl mx-auto text-center text-sm text-stone-500 dark:text-stone-400">
+            <a
+              href="/best-contemporary-novels-under-200-pages.html"
+              className="hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
+            >
+              Best Contemporary Novels Under 200 Pages →
+            </a>
+          </div>
+        </footer>
       </body>
     </html>
   );
