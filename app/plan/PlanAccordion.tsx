@@ -42,6 +42,13 @@ function SectionPill({
       </span>
     );
   }
+  if (section.section_type === "list") {
+    return (
+      <span className="text-xs font-semibold uppercase tracking-wide text-stone-400 dark:text-stone-500">
+        Reading List
+      </span>
+    );
+  }
   // "The Wild & the Elements" → show cluster number derived from section_order (5-14 → 1-10)
   const clusterNum = section.section_order - 4;
   return (

@@ -10,7 +10,7 @@ export type SectionData = {
   section_order: number;
   section_name: string;
   section_subtitle: string;
-  section_type: "quick_wins" | "cluster";
+  section_type: "quick_wins" | "cluster" | "list";
   cluster_vibe: string | null;
   books: BookWithProgress[];
 };
@@ -67,7 +67,7 @@ async function fetchSections(): Promise<FetchResult> {
         section_order: book.section_order,
         section_name: book.section_name,
         section_subtitle: book.section_subtitle,
-        section_type: book.section_type as "quick_wins" | "cluster",
+        section_type: book.section_type as "quick_wins" | "cluster" | "list",
         cluster_vibe: book.cluster_vibe,
         books: [],
       });
@@ -128,7 +128,7 @@ export default async function PlanPage() {
   const readBookIds = new Set(
     sections
       .flatMap((s) => s.books)
-      .filter((b) => b.progress?.status === "read")
+      .filter((b) => b.rank !== null && b.rank <= 100 && b.progress?.status === "read")
       .map((b) => b.id)
   );
   const totalRead = readBookIds.size;
