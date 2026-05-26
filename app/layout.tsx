@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Lora } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 import { createClient } from "@/lib/supabase/server";
 import SignOutButton from "@/components/SignOutButton";
+import SearchBar from "@/components/SearchBar";
 import { getUserRole } from "@/lib/role";
 
 const geistSans = Geist({
@@ -43,12 +45,25 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${lora.variable}`}>
       <body>
-        {session && (
-          <div className="fixed top-3 right-4 z-50 flex items-center gap-2">
-            {roleBadge}
-            <SignOutButton />
+        <header className="bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 px-4 sm:px-6 py-3">
+          <div className="max-w-6xl mx-auto flex items-center gap-4">
+            <Link
+              href="/"
+              className="font-serif font-bold text-stone-900 dark:text-stone-50 flex-shrink-0 hover:text-teal-700 dark:hover:text-teal-400 transition-colors"
+            >
+              Novella Tracker
+            </Link>
+            <div className="flex-1 max-w-xs sm:max-w-sm">
+              <SearchBar />
+            </div>
+            {session && (
+              <div className="ml-auto flex items-center gap-2 flex-shrink-0">
+                {roleBadge}
+                <SignOutButton />
+              </div>
+            )}
           </div>
-        )}
+        </header>
         {children}
         <footer className="border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 py-6 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto text-center text-sm text-stone-500 dark:text-stone-400">
