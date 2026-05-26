@@ -128,7 +128,7 @@ export default async function PlanPage() {
   const readBookIds = new Set(
     sections
       .flatMap((s) => s.books)
-      .filter((b) => b.rank !== null && b.progress?.status === "read")
+      .filter((b) => b.rank !== null && b.rank <= 100 && b.progress?.status === "read")
       .map((b) => b.id)
   );
   const totalRead = readBookIds.size;
