@@ -1,4 +1,11 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 export default function SearchBar() {
+  const pathname = usePathname();
+  if (pathname === "/login") return null;
+
   return (
     <form action="/search" method="GET" role="search" className="relative w-full">
       <input
