@@ -103,23 +103,17 @@ export default async function SearchPage({
                 href={`/book/${book.id}`}
                 className="group flex flex-col gap-3"
               >
-                {/* Cover image */}
-                <div className="relative aspect-[2/3] w-full rounded overflow-hidden bg-stone-200 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-sm group-hover:shadow-md transition-shadow">
-                  {book.cover_image_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
+                {/* Cover image — only shown when available */}
+                {book.cover_image_url && (
+                  <div className="relative aspect-[2/3] w-full rounded overflow-hidden border border-stone-200 dark:border-stone-700 shadow-sm group-hover:shadow-md transition-shadow">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={book.cover_image_url}
                       alt={`Cover of ${book.title}`}
                       className="absolute inset-0 w-full h-full object-cover"
                     />
-                  ) : (
-                    <div className="absolute inset-0 flex items-end p-3">
-                      <span className="font-serif text-xs font-medium text-stone-500 dark:text-stone-400 line-clamp-3 leading-snug">
-                        {book.title}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* Title + author */}
                 <div className="min-w-0">
