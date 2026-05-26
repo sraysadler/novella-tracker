@@ -46,22 +46,28 @@ export default async function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${lora.variable}`}>
       <body>
         <header className="bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 px-4 sm:px-6 py-3">
-          <div className="max-w-6xl mx-auto flex items-center gap-4">
-            <Link
-              href="/"
-              className="font-serif font-bold text-stone-900 dark:text-stone-50 flex-shrink-0 hover:text-teal-700 dark:hover:text-teal-400 transition-colors"
-            >
-              Novella Tracker
-            </Link>
-            <div className="flex-1 max-w-xs sm:max-w-sm">
-              <SearchBar />
+          <div className="max-w-6xl mx-auto flex items-center">
+            <div className="flex-1">
+              <Link
+                href="/"
+                className="font-serif font-bold text-stone-900 dark:text-stone-50 hover:text-teal-700 dark:hover:text-teal-400 transition-colors"
+              >
+                Novella Tracker
+              </Link>
             </div>
-            {session && (
-              <div className="ml-auto flex items-center gap-2 flex-shrink-0">
-                {roleBadge}
-                <SignOutButton />
+            <div className="flex-1 flex justify-center px-4">
+              <div className="w-full max-w-xs sm:max-w-sm">
+                <SearchBar />
               </div>
-            )}
+            </div>
+            <div className="flex-1 flex justify-end">
+              {session && (
+                <div className="flex items-center gap-2">
+                  {roleBadge}
+                  <SignOutButton />
+                </div>
+              )}
+            </div>
           </div>
         </header>
         {children}
