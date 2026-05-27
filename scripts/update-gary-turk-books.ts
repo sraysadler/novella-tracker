@@ -470,7 +470,7 @@ async function run() {
   }
 
   console.log("\nInserting 4 new books...");
-  const { error: insertError } = await supabase.from("books").insert(newBooks);
+  const { error: insertError } = await supabase.from("books").upsert(newBooks, { onConflict: "id" });
   if (insertError) throw insertError;
   console.log("  Inserted ids 162–184 (excluding 114, 143, and 162, which were note-patched above)");
 
