@@ -8,7 +8,8 @@
     "start": "next start",
     "seed": "tsx scripts/seed.ts",
     "seed-contemporary": "tsx scripts/seed-contemporary.ts",
-    "count-books": "tsx scripts/count-books.ts"
+    "count-books": "tsx scripts/count-books.ts",
+    "update-gary-turk-books": "tsx scripts/update-gary-turk-books.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
