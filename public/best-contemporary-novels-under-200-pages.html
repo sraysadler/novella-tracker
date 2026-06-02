@@ -61,9 +61,34 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
+    thead th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    thead th.sortable:hover {
+      background: #3a6f6f;
+    }
+
+    thead th.sortable::after {
+      content: ' ↕';
+      opacity: 0.4;
+      font-size: 0.75em;
+    }
+
+    thead th.sort-asc::after {
+      content: ' ↑';
+      opacity: 1;
+    }
+
+    thead th.sort-desc::after {
+      content: ' ↓';
+      opacity: 1;
+    }
+
     thead th:nth-child(1) { width: 44px; text-align: center; }
     thead th:nth-child(2) { width: 70px; text-align: center; }
-    thead th:nth-child(5) { width: 60px; text-align: center; }
+    thead th:nth-child(5) { width: 60px; text-align: center; white-space: nowrap; }
 
     tbody tr {
       border-bottom: 1px solid #f0ece4;
@@ -157,11 +182,11 @@
     <table>
       <thead>
         <tr>
-          <th>#</th>
+          <th class="sortable" data-col="0">#</th>
           <th>Cover</th>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Pages</th>
+          <th class="sortable" data-col="2">Title</th>
+          <th class="sortable" data-col="3">Author</th>
+          <th class="sortable" data-col="4">Pages</th>
           <th>Notes</th>
           <th>Description</th>
         </tr>
@@ -801,5 +826,53 @@
     </table>
   </div>
 
+
+<script>
+  (function () {
+    var state = { col: null, dir: 1 };
+
+    function getCellValue(row, col) {
+      var td = row.cells[col];
+      if (col === 3) {
+        // Author: sort by last name of primary author (ignore translator)
+        var text = td.innerText.split('\n')[0].trim();
+        var parts = text.split(' ');
+        return parts[parts.length - 1].toLowerCase();
+      }
+      if (col === 2) {
+        // Title: strip leading "The ", "A ", "An "
+        var t = td.innerText.trim().toLowerCase();
+        return t.replace(/^(the |a |an )/, '');
+      }
+      if (col === 4) return parseInt(td.innerText, 10) || 0;
+      if (col === 0) return parseInt(td.innerText, 10) || 0;
+      return td.innerText.trim().toLowerCase();
+    }
+
+    document.querySelectorAll('thead th.sortable').forEach(function (th) {
+      th.addEventListener('click', function () {
+        var col = parseInt(th.dataset.col, 10);
+        var dir = (state.col === col) ? -state.dir : 1;
+        state = { col: col, dir: dir };
+
+        document.querySelectorAll('thead th.sortable').forEach(function (h) {
+          h.classList.remove('sort-asc', 'sort-desc');
+        });
+        th.classList.add(dir === 1 ? 'sort-asc' : 'sort-desc');
+
+        var tbody = document.querySelector('tbody');
+        var rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort(function (a, b) {
+          var av = getCellValue(a, col);
+          var bv = getCellValue(b, col);
+          if (av < bv) return -dir;
+          if (av > bv) return dir;
+          return 0;
+        });
+        rows.forEach(function (r) { tbody.appendChild(r); });
+      });
+    });
+  })();
+</script>
 </body>
 </html>
